@@ -408,6 +408,8 @@ always @(posedge clk_sys) begin
 	end
 end
 
+wire edid_rxd,edid_txd;
+
 cyclonev_hps_interface_peripheral_uart uart
 (
 	.ri(0)
@@ -419,8 +421,8 @@ cyclonev_hps_interface_peripheral_uart uart
 
 	.cts(uart_cts),
 	.rts(uart_rts),
-	.rxd(uart_rxd),
-	.txd(uart_txd)
+	.rxd(edid_txd), //uart_rxd),
+	.txd(edid_rxd)  //uart_txd)
 `endif
 );
 
@@ -836,6 +838,18 @@ hdmi_config hdmi_config
 	.limited(hdmi_limited),
 	.ypbpr(ypbpr_en & direct_video)
 );
+
+
+edid edid
+(
+    .rxd(edid_rxd),
+    .txd(edid_txd),
+    .scl(HDMI_I2C_SCL),
+    .sda(HDMI_I2C_SDA),
+    .done(hdmi_config_done),
+    .clk(FPGA_CLK1_50)
+);
+
 
 wire [23:0] hdmi_data_sl;
 wire        hdmi_de_sl, hdmi_vs_sl, hdmi_hs_sl;

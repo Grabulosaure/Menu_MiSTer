@@ -23,12 +23,15 @@ wire       mI2C_END;
 wire       mI2C_ACK;
 reg [15:0] LUT_DATA;
 reg  [7:0] LUT_INDEX = 0;
+wire I2C_SCLI;
+
+assign I2C_SCL=I2C_SCLI?1'bZ:1'b0;
 
 i2c #(50_000_000, 20_000) i2c_av
 (
 	.CLK(iCLK),
 
-	.I2C_SCL(I2C_SCL),  // I2C CLOCK
+	.I2C_SCL(I2C_SCLI),  // I2C CLOCK
 	.I2C_SDA(I2C_SDA),  // I2C DATA
 
 	.I2C_ADDR('h39),    // 0x39 is the Slave Address of the ADV7513 chip!
